@@ -4,7 +4,7 @@ I'm a technical support professional transitioning deeper into cybersecurity
 and security-focused software development.
 
 I enjoy building tools that help me understand how security works in the
-real world — especially with Python, web security, networking, and AI security.
+real world especially with Python, web security, networking, and AI security.
 
 ## What I'm Working On
 
