@@ -59,7 +59,6 @@ FastAPI • Flask • React • Vite • Git • GitHub • pytest
 - CompTIA Security+
 - AI / Agent Security
 - Python Security Engineering
-- Identity & Access Management
 
 ## What Interests Me
 
