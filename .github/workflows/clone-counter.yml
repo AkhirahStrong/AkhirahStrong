@@ -1,4 +1,4 @@
-name: Repository Clones Counter
+name: GitHub Clone Count Update Everyday
 
 on:
   schedule:
@@ -6,9 +6,11 @@ on:
   workflow_dispatch: # Allows you to manually trigger it for testing
 
 jobs:
-  update-count:
+  build:
     runs-on: ubuntu-latest
     steps:
+      - uses: actions/checkout@v2
+
       - name: Fetch and Record Traffic Data
         uses: MShawon/github-clone-count-badge@1.2.0
         with:
