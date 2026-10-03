@@ -1,19 +1,21 @@
-name: GitHub Traffic to Badge
+name: Security Header Analyzer Clone Count
 
 on:
+  workflow_dispatch:
   schedule:
-    - cron: "0 0 * * *" # Runs every day at midnight
-  workflow_dispatch: # Allows manual testing
+    - cron: "0 0 * * *"
 
 jobs:
-  run:
+  get-clones:
     runs-on: ubuntu-latest
-    steps:
-      - name: Checkout Code
-        uses: actions/checkout@v3
 
-      - name: Traffic to Badge
-        uses: sstutz/github-traffic-to-badge-action@v1
-        with:
-          TARGET_REPOS: "AkhirahStrong/AkhirahStrong"
-          REPOSITORY_TOKEN: ${{ secrets.TRAFFIC_TOKEN }}
+    steps:
+      - name: Get Security Header Analyzer clone count
+        env:
+          GH_TOKEN: ${{ secrets.TRAFFIC_TOKEN }}
+        run: |
+          curl -L \
+            -H "Accept: application/vnd.github+json" \
+            -H "Authorization: Bearer $GH_TOKEN" \
+            -H "X-GitHub-Api-Version: 2026-03-10" \
+            https://api.github.com/repos/AkhirahStrong/Security-Header-Analyzer/traffic/clones

@@ -74,7 +74,3 @@ that let me experiment with them.
 ### Profile Views
 
 ![Profile Views](https://komarev.com/ghpvc/?username=AkhirahStrong)
-
-## 📊 Stats
-
-![Repository Engagement](https://pythonanywhere.com)
