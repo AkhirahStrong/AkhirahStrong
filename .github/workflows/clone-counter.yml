@@ -1,21 +1,81 @@
-name: Security Header Analyzer Clone Count
+name: Security Header Analyzer Total Clones
 
 on:
   workflow_dispatch:
   schedule:
     - cron: "0 0 * * *"
 
+permissions:
+  contents: write
+
 jobs:
-  get-clones:
+  track-clones:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Get Security Header Analyzer clone count
+      - name: Checkout profile repository
+        uses: actions/checkout@v4
+
+      - name: Get clone traffic and update history
         env:
           GH_TOKEN: ${{ secrets.TRAFFIC_TOKEN }}
         run: |
-          curl -L \
+          # Get GitHub's available clone history
+          RESPONSE=$(curl -s -L \
             -H "Accept: application/vnd.github+json" \
             -H "Authorization: Bearer $GH_TOKEN" \
-            -H "X-GitHub-Api-Version: 2026-03-10" \
-            https://api.github.com/repos/AkhirahStrong/Security-Header-Analyzer/traffic/clones
+            https://api.github.com/repos/AkhirahStrong/Security-Header-Analyzer/traffic/clones)
+
+          # Make sure GitHub returned clone data
+          if ! echo "$RESPONSE" | jq -e '.clones' > /dev/null; then
+            echo "GitHub API did not return clone data:"
+            echo "$RESPONSE"
+            exit 1
+          fi
+
+          # Create history file the first time
+          if [ ! -f clone-history.json ]; then
+            echo '{}' > clone-history.json
+          fi
+
+          # Add each date to our history.
+          # Existing dates are updated, NOT added twice.
+          echo "$RESPONSE" | jq -c '.clones[]' | while read -r item; do
+
+            DATE=$(echo "$item" | jq -r '.timestamp' | cut -d'T' -f1)
+            COUNT=$(echo "$item" | jq -r '.count')
+
+            jq \
+              --arg date "$DATE" \
+              --argjson count "$COUNT" \
+              '.[$date] = $count' \
+              clone-history.json > temp.json
+
+            mv temp.json clone-history.json
+          done
+
+          # Add every stored day together
+          TOTAL=$(jq '[.[]] | add // 0' clone-history.json)
+
+          echo "Total tracked clones: $TOTAL"
+
+          # Save total for the next step
+          echo "TOTAL=$TOTAL" >> "$GITHUB_ENV"
+
+      - name: Update profile README
+        run: |
+          sed -i "s/<!-- HEADER_CLONES -->.*<!-- HEADER_CLONES_END -->/<!-- HEADER_CLONES -->${TOTAL}<!-- HEADER_CLONES_END -->/" README.md
+
+      - name: Save clone history
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+
+          git add clone-history.json README.md
+
+          if git diff --cached --quiet; then
+            echo "Nothing changed."
+          else
+            git commit -m "Update Security Header Analyzer clone stats"
+            git push
+          fi
