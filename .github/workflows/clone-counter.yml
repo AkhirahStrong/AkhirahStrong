@@ -1,0 +1,16 @@
+name: Repository Clones Counter
+
+on:
+  schedule:
+    - cron: "0 0 * * *" # Runs automatically every day at midnight
+  workflow_dispatch: # Allows you to manually trigger it for testing
+
+jobs:
+  update-count:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Fetch and Record Traffic Data
+        uses: HatsuneMiku/clones-counter@master
+        with:
+          target-repo: "https://github.com/AkhirahStrong/AkhirahStrong"
+          token: ${{ secrets.TRAFFIC_TOKEN }}
