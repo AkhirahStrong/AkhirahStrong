@@ -73,9 +73,9 @@ that let me experiment with them.
 
 ### Profile Views
 
-![Profile Views](https://komarev.com/ghpvc/?username=AkhirahStrong)
+<!-- ![Profile Views](https://komarev.com/ghpvc/?username=AkhirahStrong) -->
 
 ## 📊 Stats
 
-![Profile Views](https://komarev.com)
 ![Repository Clones](https://shields.io)
+![Profile Views](https://komarev.com)
