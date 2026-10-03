@@ -12,5 +12,5 @@ jobs:
       - name: Fetch and Record Traffic Data
         uses: HatsuneMiku/clones-counter@master
         with:
-          target-repo: "https://github.com/AkhirahStrong/AkhirahStrong"
+          target-repo: "AkhirahStrong/AkhirahStrong"
           token: ${{ secrets.TRAFFIC_TOKEN }}
