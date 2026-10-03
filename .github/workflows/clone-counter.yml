@@ -1,18 +1,19 @@
-name: GitHub Clone Count Update Everyday
+name: GitHub Traffic to Badge
 
 on:
   schedule:
-    - cron: "0 0 * * *" # Runs automatically every day at midnight
-  workflow_dispatch: # Allows you to manually trigger it for testing
+    - cron: "0 0 * * *" # Runs every day at midnight
+  workflow_dispatch: # Allows manual testing
 
 jobs:
-  build:
+  run:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
+      - name: Checkout Code
+        uses: actions/checkout@v3
 
-      - name: Fetch and Record Traffic Data
-        uses: MShawon/github-clone-count-badge@1.2.0
+      - name: Traffic to Badge
+        uses: sstutz/github-traffic-to-badge-action@v1
         with:
-          target-repo: "AkhirahStrong/AkhirahStrong"
-          token: ${{ secrets.TRAFFIC_TOKEN }}
+          TARGET_REPOS: "AkhirahStrong/AkhirahStrong"
+          REPOSITORY_TOKEN: ${{ secrets.TRAFFIC_TOKEN }}
